@@ -1,33 +1,33 @@
 #!/usr/bin/python3
-"""
-    View
-"""
-from flask import jsonify
+"""to connect to API"""
 from api.v1.views import app_views
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
+from flask import Flask, Blueprint, jsonify
+from models import storage
 
 
-classes = {"amenities": Amenity, "cities": City,
-           "places": Place, "reviews": Review, "states": State, "users": User}
+hbnbText = {
+    "amenities": "Amenity",
+    "cities": "City",
+    "places": "Place",
+    "reviews": "Review",
+    "states": "State",
+    "users": "User"
+}
 
 
-@app_views.route('/status')
-def status():
-    """ status route """
-    return jsonify({'status': 'OK'})
+@app_views.route('/status', strict_slashes=False)
+def hbnbStatus():
+    """hbnbStatus"""
+    return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats')
-def stats():
-    """ status route """
-    from models import storage
-    stats = dict()
-    for k, c in classes.items():
-        stats.update({k: storage.count(c)})
-    return jsonify(stats)
+@app_views.route('/stats', strict_slashes=False)
+def hbnbStats():
+    """hbnbStats"""
+    return_dict = {}
+    for key, value in hbnbText.items():
+        return_dict[key] = storage.count(value)
+    return jsonify(return_dict)
+
+if __name__ == "__main__":
+    pass
